@@ -2,7 +2,7 @@
 
 Configuration files for personal use. Listed below are the files in this project. 
 
-**Note:** files prefixed with `_`, must be replaced with `.` (dot)
+**Note:** files prefixed with `_` must be replaced with `.` (dot)
 
 File Names | Description
 --- | --- 
