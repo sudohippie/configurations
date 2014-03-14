@@ -3,13 +3,16 @@
 install(){
 	pkg=$1
 	apt-get install $pkg
+	dpkg -s $pkg | grep Status
 	echo "* Complete. Package $pkg installed."
+	echo
 }
 
 skip(){
 	pkg=$1
 	msg=$2
-	echo "- Skipping $pkg. $msg."
+	echo "- Skipped $pkg. $msg."
+	echo
 }
 
 # Manage services
