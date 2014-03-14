@@ -35,3 +35,9 @@ skip "virtualbox" "Install directly from www.virtualbox.org"
 
 # Plex media server
 skip "plexmediaserver" "Install directly from plex.tv"
+
+# IntelliJ
+skip "intellij" "Install directly from www.jetbrains.com"
+
+# Java
+skip "jdk" "Install directly from java.com. Also look at sudohippie.wordress.com"
