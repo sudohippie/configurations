@@ -41,4 +41,5 @@ then
 fi
 
 echo "Background image: $IMG"
+echo "Rendered at: `date`" 
 gsettings set org.gnome.desktop.background picture-uri file:///$IMG
