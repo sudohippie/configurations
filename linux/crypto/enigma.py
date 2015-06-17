@@ -18,6 +18,47 @@ class Command(object):
         self.args = args
 
     def _validate(self):
+        pass
+
+    def _get_command(self):
+        return []
+
+    def execute(self):
+        # validate the arguments
+        try:
+            self._validate()
+        except Exception as e:
+            print ('Enigma user exception - ' + str(e.message))
+            return
+
+        # get the command
+        cmd = self._get_command()
+        if not cmd or len(cmd) == 0:
+            raise Exception('Enigma fatal - Missing native command')
+
+        # call
+        call(cmd)
+
+        print(str(cmd))
+
+    def _pipe(*args):
+        cmd = []
+
+        for arg in args[1:]:
+
+            if type(arg) is list:
+                cmd.extend(arg)
+
+            else:
+                cmd.append(arg)
+
+            cmd.append('|')
+        return list(cmd[: len(cmd) - 1])
+
+
+class CrytoCommand(Command):
+
+    def _validate(self):
 
         # check argument size
         args_len = len(self.args)
@@ -54,56 +95,15 @@ class Command(object):
         self.file_a = file_a
         self.file_b = file_b
 
-    def _get_command(self):
-        return []
-
-    def execute(self):
-        # validate the arguments
-        try:
-            self._validate()
-        except Exception as e:
-            print ('Enigma user exception - ' + str(e.message))
-            return
-
-        # get the command
-        cmd = self._get_command()
-        if not cmd or len(cmd) == 0:
-            raise Exception('Enigma fatal - Missing native command')
-
-        # call
-        call(cmd)
-
-        print(cmd)
-
-
-class CrytoCommand(Command):
-
-    def _build_crypto_cmd(self, mode, ifile, ofile):
-
-        if not mode:
-            raise Exception('Enigma fatal - openssl mode must be specified')
-
-        cmd = [
-            'openssl',
-            'enc',
-            '-aes-256-cbc',
-            mode,
-            '-a',
-            '-in',
-            ifile,
-            '-out',
-            ofile
-        ]
-
-        return cmd
-
 
 class EncryptCommand(CrytoCommand):
 
     type = 'encrypt'
 
     def _get_command(self):
-        return self._build_crypto_cmd('-e', self.file_a, self.file_b)
+        compress = ['tar', 'zcvf', '-', self.file_a]
+        encrypt = ['openssl', 'enc', '-e', '-a', '-aes-256-cbc', '-out', self.file_b]
+        return self._pipe(compress, encrypt)
 
 
 class DecryptCommand(CrytoCommand):
@@ -111,28 +111,19 @@ class DecryptCommand(CrytoCommand):
     type = 'decrypt'
 
     def _get_command(self):
-        return self._build_crypto_cmd('-d', self.file_a, self.file_b)
-
-
-def __pipe(*args):
-    cmd = []
-
-    for arg in args:
-        cmd.append(arg)
-        cmd.append('|')
-
-    cmd_len = len(cmd)
-    return cmd[: cmd_len - 1]
+        decrypt = ['openssl', 'enc', '-aes-256-cbc', '-d', '-a', '-in', self.file_a]
+        decompress = ['tar', 'zxvf', '-']
+        return self._pipe(decrypt, decompress)
 
 
 def __get_command(name):
 
-    strategy = {
+    command_map = {
         EncryptCommand.type: EncryptCommand,
         DecryptCommand.type: DecryptCommand
     }
 
-    return strategy.get(name, None)
+    return command_map.get(name, None)
 
 
 # encrypt [-f] file_a [file_b]
@@ -149,6 +140,7 @@ if __name__ == '__main__':
         name = args[1]
 
         CMD = __get_command(name)
+
         if not CMD:
             print('Enigma user exception - Invalid command: ' + name)
         else:
