@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # check arguments
 if [ "$#" -eq 1 ]

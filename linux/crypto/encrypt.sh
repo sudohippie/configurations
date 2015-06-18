@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 curr_time=$(date +%Y%m%d%H%M%S)
 
