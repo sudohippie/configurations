@@ -6,7 +6,8 @@ curr_time=$(date +%Y%m%d%H%M%S)
 if [ "$#" -eq 1 ]
 then
     INFILE="$1"
-    OUTFILE="$1.$curr_time.encrypt"
+    BN=$(basename $1)
+    OUTFILE="$BN.$curr_time.encrypt"
 elif [ "$#" -eq 2 ]
 then
     INFILE="$1"
