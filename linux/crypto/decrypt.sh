@@ -9,7 +9,7 @@ if [ "$#" -eq 1 ]
 then
     INFILE=$1
 else
-    echo "${RED}Invalid arguments. Missing input argument.${NO_COL}"
+    echo "${RED}Invalid arguments. Input file is required.${NO_COL}"
     exit 1;
 fi
 
