@@ -18,5 +18,11 @@ fi
 
 openssl enc -d -a -aes-256-cbc -in $INFILE | tar zxvf -
 
-echo "Decrypted: $INFILE"
+if [ $? -eq 0 ]
+then
+    echo "Decrypted: $INFILE"
+else
+    echo "Decryption failed."
+fi
+
 exit 0

@@ -33,5 +33,11 @@ fi
 # execute the command
 tar zcvf - $INFILE | openssl enc -e -a -aes-256-cbc -out $OUTFILE
 
-echo "Encrypted: $INFILE > $OUTFILE"
+if [ $? -eq 0 ]
+then
+    echo "Encrypted: $INFILE > $OUTFILE"
+else
+    echo "Encryption failed."
+fi
+
 exit 0;
