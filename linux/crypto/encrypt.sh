@@ -12,7 +12,7 @@ if [ "$#" -eq 1 ]
 then
     INFILE="$1"
     BN=$(basename $1)
-    OUTFILE="$BN.$curr_time.encrypt"
+    OUTFILE="${BN}.${curr_time}.encrypt"
 elif [ "$#" -eq 2 ]
 then
     INFILE="$1"
