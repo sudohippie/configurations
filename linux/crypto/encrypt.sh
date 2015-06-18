@@ -2,6 +2,10 @@
 
 curr_time=$(date +%Y%m%d%H%M%S)
 
+RED_COL="\033[0;31m"
+GREEN_COL="\033[0;32m"
+NO_COL="\033[0m"
+
 # check arguments
 if [ "$#" -eq 1 ]
 then
@@ -13,20 +17,20 @@ then
     INFILE="$1"
     OUTFILE="$2"
 else
-    >&2 echo "Invalid number of arguments. Please specify one or two argument(s) only."
+    >&2 echo "${RED_COL}Invalid number of arguments. Please specify one or two argument(s) only.${NO_COL}"
     exit 1;
 fi
 
 # check input and output files
 if [ ! -e $INFILE ]
 then
-    >&2 echo "Invalid argument. Input file does not exist."
+    >&2 echo "${RED_COL}Invalid argument. Input file does not exist.${NO_COL}"
     exit 1;
 fi
 
 if [ -e $OUTFILE ]
 then
-    >&2 echo "Invalid argument. Output file already exists and will not be overwritten."
+    >&2 echo "${RED_COL}Invalid argument. Output file already exists and will not be overwritten.${NO_COL}"
     exit 1;
 fi
 
@@ -35,9 +39,9 @@ tar zcvf - $INFILE | openssl enc -e -a -aes-256-cbc -out $OUTFILE
 
 if [ $? -eq 0 ]
 then
-    echo "Encrypted: $INFILE > $OUTFILE"
+    echo "${GREEN_COL}Encryption successful: $INFILE > $OUTFILE${NO_COL}"
 else
-    echo "Encryption failed."
+    echo "${RED_COL}Encryption failed.${NO_COL}"
 fi
 
 exit 0;
