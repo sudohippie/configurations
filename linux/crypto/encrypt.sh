@@ -4,6 +4,7 @@ curr_time=$(date +%Y%m%d%H%M%S)
 
 RED_COL="\033[0;31m"
 GREEN_COL="\033[0;32m"
+YELLOL_COL="\033[0;33m"
 NO_COL="\033[0m"
 
 # check arguments
@@ -39,7 +40,7 @@ tar zcvf - $INFILE | openssl enc -e -a -aes-256-cbc -out $OUTFILE
 
 if [ $? -eq 0 ]
 then
-    echo "${GREEN_COL}Encryption successful: $INFILE > $OUTFILE${NO_COL}"
+    echo "${GREEN_COL}Encryption successful: ${YELLOL_COL}$INFILE -> $OUTFILE${NO_COL}"
 else
     echo "${RED_COL}Encryption failed.${NO_COL}"
 fi
