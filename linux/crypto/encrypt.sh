@@ -18,20 +18,23 @@ then
     INFILE="$1"
     OUTFILE="$2"
 else
-    >&2 echo "${RED}Invalid argument(s). Input file is required, output file is optional.${NO_COL}"
+    printf "${RED}Invalid argument(s). Input file is required, output file is optional.${NO_COL}"
+    printf "\n"
     exit 1;
 fi
 
 # check input and output files
 if [ ! -e ${INFILE} ]
 then
-    >&2 echo "${RED}Invalid argument. Input file does not exist.${NO_COL}"
+    printf "${RED}Invalid argument. Input file does not exist.${NO_COL}"
+    printf "\n"
     exit 1;
 fi
 
 if [ -e ${OUTFILE} ]
 then
-    >&2 echo "${RED}Invalid argument. Output file exists. For safety, it will not be overwritten.${NO_COL}"
+    printf "${RED}Invalid argument. Output file exists. For safety, it will not be overwritten.${NO_COL}"
+    printf "\n"
     exit 1;
 fi
 
@@ -41,9 +44,11 @@ tar -zcvf - --transform=${replace} --show-transformed ${INFILE} | openssl enc -e
 
 if [ $? -eq 0 ]
 then
-    echo "${GREEN}Encryption successful: ${YELLOW}$INFILE -> $OUTFILE${NO_COL}"
+    printf "${GREEN}Encryption successful: ${YELLOW}$INFILE -> $OUTFILE${NO_COL}"
+    printf "\n"
 else
-    echo "${RED}Encryption failed.${NO_COL}"
+    printf "${RED}Encryption failed.${NO_COL}"
+    printf "\n"
 fi
 
 exit 0;
