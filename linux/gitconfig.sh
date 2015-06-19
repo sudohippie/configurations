@@ -1,4 +1,4 @@
-git config user.name "Raghav sidhanti"
+git config user.name "Raghav Sidhanti"
 git config user.email "sudohippie@users.noreply.github.com"
 git config core.editor "vim"
 git config merge.tool "vimdiff"
