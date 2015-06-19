@@ -37,18 +37,13 @@ fi
 
 # execute the command
 replace="s/^.*${BN}/${BN}/" # tar preserves complete path, this changes it.
-# Pipe by default runs concurrently, the following checks make it sequential
-if compress=$(tar -zcvf - --transform=${replace} --show-transformed ${INFILE})
-then
-    printf '%s' "${compress}" | openssl enc -e -a -aes-256-cbc -out ${OUTFILE}
+tar -zcvf - --transform=${replace} --show-transformed ${INFILE} | openssl enc -e -a -aes-256-cbc -out ${OUTFILE}
 
-    if [ $? -eq 0 ]
-    then
-        echo "${GREEN}Encryption successful: ${YELLOW}$INFILE -> $OUTFILE${NO_COL}"
-        exit 0;
-    fi
+if [ $? -eq 0 ]
+then
+    echo "${GREEN}Encryption successful: ${YELLOW}$INFILE -> $OUTFILE${NO_COL}"
+else
+    echo "${RED}Encryption failed.${NO_COL}"
 fi
 
-echo "${RED}Encryption failed.${NO_COL}"
-
-exit "$?";
+exit 0;
