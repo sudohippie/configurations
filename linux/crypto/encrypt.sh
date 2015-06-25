@@ -116,7 +116,7 @@ main(){
 
     exit 0;
 
-    UNSET delete_flag
+    UNSET should_delete_file
 }
 
 main "$@"
