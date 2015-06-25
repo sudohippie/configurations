@@ -1,13 +1,17 @@
 #!/bin/sh
 
+CURR_TIME=$(date +%Y%m%d%H%M%S)
+
 RED="\033[0;31m"
 GREEN="\033[0;32m"
 YELLOW="\033[0;33m"
 NO_COL="\033[0m"
 
+DELETE_FLAG="-d"
+
 build_output_file(){
     BN=$(basename $1)
-    FILE="${BN}.${curr_time}.encrypt"
+    FILE="${BN}.${CURR_TIME}.encrypt"
     echo "${FILE}"
 }
 
@@ -27,13 +31,12 @@ print_error(){
 }
 
 main(){
-    curr_time=$(date +%Y%m%d%H%M%S)
-    delete_flag=false
+    should_delete_file=false
 
     # check arguments
     if [ "$#" -eq 1 ]
     then
-        if [ $1 = "-d" ]
+        if [ $1 = ${DELETE_FLAG} ]
         then
             print_error "Invalid flag argument(s). Flag must be followed by one or more arguments"
             exit 1;
@@ -44,10 +47,10 @@ main(){
 
     elif [ "$#" -eq 2 ]
     then
-        # if first is -d, set flag
-        if [ "$1" = "-d" ]
+        # if first is delete flag, should delete file
+        if [ "$1" = ${DELETE_FLAG} ]
         then
-            delete_flag=true
+            should_delete_file=true
 
             INFILE="$2"
             OUTFILE=$(build_output_file $2)
@@ -58,15 +61,15 @@ main(){
         fi
     elif [ "$#" -eq 3 ]
     then
-        # first must be -d, else exception
-        if [ "$1" != "-d" ]
+        # first must be delete flag, else exception
+        if [ "$1" != ${DELETE_FLAG} ]
         then
             print_error "Invalid flag argument(s): $1."
             exit 1;
         fi
 
         # remaining, represent input output files
-        delete_flag=true
+        should_delete_file=true
 
         INFILE="$2"
         OUTFILE="$3"
@@ -96,7 +99,7 @@ main(){
     then
         print_info "Encryption successful: ${INFILE} -> ${OUTFILE}"
 
-        if [ ${delete_flag} = true ]
+        if [ ${should_delete_file} = true ]
         then
             rm -rfi ${INFILE}
 
@@ -113,13 +116,16 @@ main(){
 
     exit 0;
 
-    UNSET curr_time
     UNSET delete_flag
 }
 
 main "$@"
 
+UNSET CURR_TIME
+
 UNSET RED
 UNSET YELLOW
 UNSET GREEN
 UNSET NO_COL
+
+UNSET DELETE_FLAG
