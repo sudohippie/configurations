@@ -1,36 +1,52 @@
 #!/bin/sh
 
 RED="\033[0;31m"
+YELLOW="\033[0;33m"
 GREEN="\033[0;32m"
 NO_COL="\033[0m"
 
-# check arguments
-if [ "$#" -eq 1 ]
-then
-    INFILE=$1
-else
-    printf "${RED}Invalid arguments. Input file is required${NO_COL}"
+print_info(){
+    printf "${GREEN}$1${NO_COL}"
     printf "\n"
-    exit 1;
-fi
+}
 
-# check input file
-if [ ! -e ${INFILE} ]
-then
-    printf "${RED}Invid argument. Input file does not exist.${NO_COL}"
+print_warn(){
+    printf "${YELLOW}$1${NO_COL}"
     printf "\n"
-    exit 1;
-fi
+}
 
-openssl enc -d -a -aes-256-cbc -in ${INFILE} | tar zxvf -
-
-if [ $? -eq 0 ]
-then
-    printf "${GREEN}Decryption successful: ${INFILE}${NO_COL}"
+print_error(){
+    printf "${RED}$1${NO_COL}"
     printf "\n"
-else
-    printf "${RED}Decryption failed.${NO_COL}"
-    printf "\n"
-fi
+}
 
-exit 0
+main(){
+    # check arguments
+    if [ "$#" -eq 1 ]
+    then
+        INFILE=$1
+    else
+        print_error "Invalid arguments. Input file is required"
+        exit 1;
+    fi
+
+    # check input file
+    if [ ! -e ${INFILE} ]
+    then
+        print_error "Invalid argument. Input file does not exist."
+        exit 1;
+    fi
+
+    openssl enc -d -a -aes-256-cbc -in ${INFILE} | tar xvf -
+
+    if [ $? -eq 0 ]
+    then
+        print_info "Decryption successful: ${INFILE}"
+    else
+        print_error "Decryption failed."
+    fi
+
+    exit 0
+}
+
+main "$@"

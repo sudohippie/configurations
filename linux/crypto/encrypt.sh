@@ -10,8 +10,8 @@ NO_COL="\033[0m"
 DELETE_FLAG="-d"
 
 build_output_file(){
-    BN=$(basename $1)
-    FILE="${BN}.${CURR_TIME}.encrypt"
+    basename=$(basename $1)
+    FILE="${basename}.${CURR_TIME}.encrypt"
     echo "${FILE}"
 }
 
@@ -28,6 +28,34 @@ print_warn(){
 print_error(){
     printf "${RED}$1${NO_COL}"
     printf "\n"
+}
+
+encrypt(){
+    # execute the command
+#    tar -zcvf - --transform=${replace} --show-transformed $1 | openssl enc -e -a -aes-256-cbc -out $2
+
+    basename=$(basename $1)
+    replace="s/^.*${basename}/${basename}/" # tar preserves complete path, this changes it.
+    tar -cvf - --transform=${replace} --show-transformed $1 | openssl enc -e -a -aes-256-cbc -out $2
+
+    if [ $? -eq 0 ]
+    then
+        print_info "Encryption successful: $1 -> $2"
+
+        if [ $3 = true ]
+        then
+            rm -rfi $1
+
+            if [ $? -eq 0 ] && [ ! -e $1 ]
+            then
+                print_warn "File DELETED: $1"
+            else
+                print_error "File NOT-DELETED: $1"
+            fi
+        fi
+    else
+        print_error "Encryption failed."
+    fi
 }
 
 main(){
@@ -91,28 +119,7 @@ main(){
         exit 1;
     fi
 
-    # execute the command
-    replace="s/^.*${BN}/${BN}/" # tar preserves complete path, this changes it.
-    tar -zcvf - --transform=${replace} --show-transformed ${INFILE} | openssl enc -e -a -aes-256-cbc -out ${OUTFILE}
-
-    if [ $? -eq 0 ]
-    then
-        print_info "Encryption successful: ${INFILE} -> ${OUTFILE}"
-
-        if [ ${should_delete_file} = true ]
-        then
-            rm -rfi ${INFILE}
-
-            if [ $? -eq 0 ] && [ ! -e ${INFILE} ]
-            then
-                print_warn "File DELETED: ${INFILE}"
-            else
-                print_error "File NOT-DELETED: ${INFILE}"
-            fi
-        fi
-    else
-        print_error "Encryption failed."
-    fi
+    encrypt ${INFILE} ${OUTFILE} ${should_delete_file}
 
     exit 0;
 
