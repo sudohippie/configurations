@@ -24,24 +24,24 @@ main(){
     # check arguments
     if [ "$#" -eq 1 ]
     then
-        INFILE=$1
+        infile="$1"
     else
         print_error "Invalid arguments. Input file is required"
         exit 1;
     fi
 
     # check input file
-    if [ ! -e ${INFILE} ]
+    if [ ! -e "${infile}" ]
     then
         print_error "Invalid argument. Input file does not exist."
         exit 1;
     fi
 
-    openssl enc -d -a -aes-256-cbc -in ${INFILE} | tar xvf -
+    openssl enc -d -a -aes-256-cbc -in "${infile}" | tar xvf -
 
     if [ $? -eq 0 ]
     then
-        print_info "Decryption successful: ${INFILE}"
+        print_info "Decryption successful: ${infile}"
     else
         print_error "Decryption failed."
     fi
