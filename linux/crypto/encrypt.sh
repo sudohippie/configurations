@@ -1,6 +1,6 @@
 #!/bin/sh
 
-CURR_TIME=$(date +%Y%m%d%H%M%S)
+CURR_TIME=$(date +%Y%m%d-%H%M%S-%3N)
 
 RED="\033[0;31m"
 GREEN="\033[0;32m"
@@ -31,31 +31,38 @@ print_error(){
 }
 
 encrypt(){
-    # execute the command
-#    tar -zcvf - --transform=${replace} --show-transformed $1 | openssl enc -e -a -aes-256-cbc -out $2
-
     basename=$(basename $1)
     replace="s/^.*${basename}/${basename}/" # tar preserves complete path, this changes it.
-    tar -cvf - --transform=${replace} --show-transformed $1 | openssl enc -e -a -aes-256-cbc -out $2
 
+    tar cf - --transform=${replace} $1 > /dev/null 2>&1
+    # only if compression is successful, encrypt
     if [ $? -eq 0 ]
     then
-        print_info "Encryption successful: $1 -> $2"
+        tar -cvf - --transform=${replace} --show-transformed $1 | openssl enc -e -a -aes-256-cbc -out $2
 
-        if [ $3 = true ]
+        if [ $? -eq 0 ]
         then
-            rm -rfi $1
+            print_info "Encryption successful: $1 -> $2"
 
-            if [ $? -eq 0 ] && [ ! -e $1 ]
+            if [ $3 = true ]
             then
-                print_warn "File DELETED: $1"
-            else
-                print_error "File NOT-DELETED: $1"
+                rm -rfi $1
+
+                if [ $? -eq 0 ] && [ ! -e $1 ]
+                then
+                    print_warn "File DELETED: $1"
+                else
+                    print_error "File NOT-DELETED: $1"
+                fi
             fi
+
+            exit 0
         fi
-    else
-        print_error "Encryption failed."
     fi
+
+    print_error "Encryption failed."
+
+    exit 1
 }
 
 main(){
@@ -121,7 +128,7 @@ main(){
 
     encrypt ${INFILE} ${OUTFILE} ${should_delete_file}
 
-    exit 0;
+    exit 0
 
     UNSET should_delete_file
 }
