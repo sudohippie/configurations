@@ -1,0 +1,13 @@
+---
+- name: debian common tools
+  hosts: local
+  sudo: yes
+  remote_user: rsidhanti
+  
+  pre_tasks:
+   - name: update apt     
+     when: ansible_os_family == "Debian"
+     apt: update_cache=true
+        
+  roles:
+   - {role: debian-common-tools, when: ansible_os_family == "Debian"}

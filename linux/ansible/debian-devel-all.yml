@@ -1,0 +1,12 @@
+---
+- name: development environment setup
+  hosts: local
+  sudo: yes
+
+  pre_tasks:
+    - name: update apt
+      when: ansible_os_family == "Debian"
+      apt: update_cache=true
+        
+  roles:
+   - {role: debian-devel-tools, when: ansible_os_family == "Debian"}

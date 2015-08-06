@@ -1,0 +1,7 @@
+---
+- name: Install tools
+  apt: pkg={{ item }} state=installed
+  with_items:
+          - tmux # terminal multiplexer
+          - jq # json parser
+          - wireshark

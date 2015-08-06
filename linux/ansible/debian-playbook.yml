@@ -1,7 +1,0 @@
----
-- hosts: local
-  sudo: yes
-  remote_user: root
-  roles:
-   - {role: debian-devel-tools, when: ansible_os_family == 'Debian'}
-
