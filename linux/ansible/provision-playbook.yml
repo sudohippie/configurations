@@ -2,5 +2,5 @@
 - hosts: local
   sudo: yes
   roles:
-   - dev
+   - devel-tools
 

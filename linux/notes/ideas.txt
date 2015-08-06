@@ -1,0 +1,1 @@
+Changing system default text editor: http://www.howtogeek.com/howto/ubuntu/change-the-default-editor-from-nano-on-ubuntu-linux/

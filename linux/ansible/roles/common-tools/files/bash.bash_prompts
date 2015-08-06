@@ -1,0 +1,23 @@
+# Colors
+WHITE="\[\033[00;37m\]"
+YELLOW="\[\033[00;33m\]"
+COLOR_NONE="\[\033[00m\]"
+
+# Vars
+PROMPT_SYMBOL1="${WHITE}#{COLOR_NONE}"
+PROMPT_SYMBOL2="${WHITE}>{COLOR_NONE}"
+PROMPT_SYMBOL3="${WHITE}${COLOR_NONE}"
+
+USER="${WHITE}\u${COLOR_NONE}"
+HOST="${WHITE}\h${COLOR_NONE}"
+USER_AND_HOST="${WHITE}\u@\h${COLOR_NONE}"
+
+CWD1="${YELLOW}[\W]${COLOR_NONE}"
+CWD2="${YELLOW}[\w]${COLOR_NONE}"
+
+# Prompt Styles
+#PS1="${debian_chroot:+($debian_chroot)}${USER}:${CWD1} ${PROMPT_SYMBOL1} "
+PS1="\n${debian_chroot:+($debian_chroot)}${USER}:${CWD2}\n${PROMPT_SYMBOL1} "
+
+# Set terminal out
+set -o vi
