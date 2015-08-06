@@ -1,0 +1,11 @@
+---
+- name: Apt cache update
+  apt: update_cache=true
+
+- name: Apt install tools
+  apt: pkg={{ item }} state=installed
+  with_items:
+          - vim
+          - htop
+          - sysv-rc-conf # service manager
+          - tree

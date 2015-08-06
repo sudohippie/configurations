@@ -1,0 +1,12 @@
+---
+- name: Git install
+  apt: pkg=git state=installed
+  register: gitinstalled
+
+- name: Add .gitconfig
+  when: gitinstalled|success
+  copy: src=git.gitconfig dest=/home/{{ whoami }}/.gitconfig
+
+- name: Add .gitignore
+  when: gitinstalled|success
+  copy: src=git.gitignore dest=/home/{{ whoami }}/.gitignore
