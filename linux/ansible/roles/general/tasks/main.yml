@@ -1,8 +1,0 @@
----
-- name: Apt cache update
-  apt: update_cache=true
-
-- name: Apt installs
-  apt: pkg={{ item }} state=installed
-  with_items:
-          - vim
