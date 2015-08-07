@@ -1,6 +1,6 @@
 ---
-#- name: Apt cache update
-#  apt: update_cache=true
-
 - include: basic.yml
+  when: ansible_os_family == os_family
+
 - include: git.yml
+  when: ansible_os_family == os_family

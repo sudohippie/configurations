@@ -2,11 +2,23 @@
 - name: development environment setup
   hosts: local
   sudo: yes
+  #remote_user:
+  
+  vars:
+    - os_family: "Debian"
+  
+  vars_prompt:
+    - name: "overwrite_gitignore"
+      prompt: "Overwrite global git ignore (yes/no)?"
+           
+    - name: "overwrite_gitconfig"
+      prompt: "Overwrite global git config (yes/no)?"
 
   pre_tasks:
     - name: update apt
-      when: ansible_os_family == "Debian"
+      when: ansible_os_family == os_family
       apt: update_cache=true
         
   roles:
-   - {role: debian-devel-tools, when: ansible_os_family == "Debian"}
+    - debian-common-tools
+    - debian-devel-tools

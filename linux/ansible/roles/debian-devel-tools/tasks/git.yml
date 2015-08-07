@@ -4,9 +4,9 @@
   register: gitinstalled
 
 - name: Add .gitconfig
-  when: gitinstalled|success
-  copy: src=git.gitconfig dest=/home/{{ whoami }}/.gitconfig
+  when: gitinstalled|success and overwrite_gitconfig == "yes"
+  copy: src=git.gitconfig dest=/home/{{ ansible_env.SUDO_USER }}/.gitconfig
 
 - name: Add .gitignore
-  when: gitinstalled|success
-  copy: src=git.gitignore dest=/home/{{ whoami }}/.gitignore
+  when: gitinstalled|success and overwrite_gitignore == "yes"
+  copy: src=git.gitignore dest=/home/{{ ansible_env.SUDO_USER }}/.gitignore

@@ -1,8 +1,3 @@
 ---
-- name: Apt install tools
-  apt: pkg={{ item }} state=installed
-  with_items:
-          - vim
-          - htop
-          - sysv-rc-conf # service manager
-          - tree
+- include: basic.yml
+  when: ansible_os_family == os_family

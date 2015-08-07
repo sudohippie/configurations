@@ -1,0 +1,8 @@
+---
+- name: Apt install tools
+  apt: pkg={{ item }} state=installed
+  with_items:
+          - vim
+          - htop
+          - sysv-rc-conf # service manager
+          - tree
